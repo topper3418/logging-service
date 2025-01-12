@@ -177,10 +177,9 @@ func createLog(w http.ResponseWriter, r *http.Request) {
 
 	// Fetch logger ID
 	row := db.QueryRow(`SELECT id, level FROM logger WHERE name = ?`, entry.Logger)
-	var logger string
 	var loggerID int
 	var loggerLevel string
-	err = row.Scan(&logger, &loggerLevel)
+	err = row.Scan(&loggerID, &loggerLevel)
 	if err == sql.ErrNoRows {
 		loggerLevel = "info" // Default to info if logger doesn't exist
 		result, err := db.Exec(`INSERT INTO logger (name, level) VALUES (?, ?)`, entry.Logger, loggerLevel)
@@ -292,14 +291,7 @@ func getLogs(w http.ResponseWriter, r *http.Request) {
 	includeLoggers := r.URL.Query()["includeLoggers"] // may appear multiple times
 	excludeLoggers := r.URL.Query()["excludeLoggers"] // may appear multiple times
 	searchStr := r.URL.Query().Get("search")
-	fmt.Printf("minTimeStr: %s\n", minTimeStr)
-	fmt.Printf("maxTimeStr: %s\n", maxTimeStr)
-	fmt.Printf("offsetStr: %s\n", offsetStr)
-	fmt.Printf("limitStr: %s\n", limitStr)
-	fmt.Printf("includeLoggers: %v\n", includeLoggers)
-	fmt.Printf("excludeLoggers: %v\n", excludeLoggers)
-	fmt.Printf("searchStr: %s\n", searchStr)
-	queryBuilder := `SELECT log.id, log.timestamp, log.logger_id, logger.name, log.level, log.message FROM log LEFT JOIN logger ON log.logger_id = logger.id WHERE 1=1`
+	queryBuilder := `SELECT log.id, log.timestamp, log.logger_id AS loggerID, logger.name AS logger, log.level, log.message FROM log LEFT JOIN logger ON log.logger_id = logger.id WHERE 1=1`
 	args := []interface{}{}
 
 	// Time range filters
@@ -359,8 +351,6 @@ func getLogs(w http.ResponseWriter, r *http.Request) {
 		args = append(args, limitVal)
 	}
 
-	log.Printf("running query: %s", queryBuilder)
-
 	rows, err := db.Query(queryBuilder, args...)
 	if err != nil {
 		log.Println("Failed to query logs")
@@ -371,7 +361,6 @@ func getLogs(w http.ResponseWriter, r *http.Request) {
 
 	var results []LogEntry
 	for rows.Next() {
-		log.Printf("Processing row")
 		var l LogEntry
 		var loggerName string
 		err := rows.Scan(&l.ID, &l.Timestamp, &l.LoggerID, &loggerName, &l.Level, &l.Message)
