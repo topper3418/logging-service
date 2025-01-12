@@ -51,3 +51,18 @@ logging-microservice/
  ┣ go.mod
  ┣ go.sum
  ┗ Dockerfile
+```
+- db/: Database logic (initialization, queries, and CRUD operations).
+- handlers/: HTTP handlers for logs and config endpoints.
+- models/: Data structures (Logger, LogEntry).
+- main.go: Application entry point (server and route setup).
+- Dockerfile: Multi-stage Docker build file.
+
+---
+
+## Setup and Run Locally
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/yourusername/logging-microservice.git
+   cd logging-microservice
+   ```
