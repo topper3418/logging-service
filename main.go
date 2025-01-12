@@ -24,7 +24,7 @@ func main() {
     }
 
     // Initialize the database connection
-    if err := db.InitDB("./logs.db"); err != nil {
+    if err := db.InitDB("./data/logs.db"); err != nil {
         log.Fatal("Database initialization failed:", err)
     }
     defer db.DB.Close()

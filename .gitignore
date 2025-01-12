@@ -1,3 +1,3 @@
 logging_microservice.db
-logs.db
+data/logs.db
 logging-ms.exe
