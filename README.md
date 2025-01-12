@@ -52,6 +52,7 @@ logging-microservice/
  ┣ go.sum
  ┗ Dockerfile
 ```
+
 - db/: Database logic (initialization, queries, and CRUD operations).
 - handlers/: HTTP handlers for logs and config endpoints.
 - models/: Data structures (Logger, LogEntry).
@@ -66,3 +67,17 @@ logging-microservice/
    git clone https://github.com/yourusername/logging-microservice.git
    cd logging-microservice
    ```
+2. **(Optional) Update go.mod to match your module path:**:
+   ```bash
+   go mod tidy
+   ```
+3. **Build and run**:
+   ```bash
+   # Make sure CGO is enabled
+   export CGO_ENABLED=1
+
+   go build -o logging-ms main.go
+   ./logging-ms
+   ```
+4. **Confirm the service is running at http://localhost:8080.**
+   
