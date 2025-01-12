@@ -249,13 +249,13 @@ logging-microservice/
 
    ```bash
    curl -X POST http://localhost:8080/logs \
-   -H "Content-Type: application/json" \
-   -d '{
-   "logger": "appLogger",
-   "level": "info",
-   "message": "Just testing logs",
-   "meta": { "username": "bob" }
-   }'
+      -H "Content-Type: application/json" \
+      -d '{
+      "logger": "appLogger",
+      "level": "info",
+      "message": "Just testing logs",
+      "meta": { "username": "bob" }
+      }'
    ```
 
 2. **View Logs:**
@@ -268,10 +268,10 @@ logging-microservice/
 
    ```bash
    curl -X POST http://localhost:8080/config \
-   -H "Content-Type: application/json" \
-   -d '{
-   "name": "appLogger",
-   "level": "warn"
-   }'
+      -H "Content-Type: application/json" \
+      -d '{
+      "name": "appLogger",
+      "level": "warn"
+      }'
    ```
 
