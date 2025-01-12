@@ -62,16 +62,22 @@ logging-microservice/
 ---
 
 ## Setup and Run Locally
+
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/yourusername/logging-microservice.git
    cd logging-microservice
    ```
+
 2. **(Optional) Update go.mod to match your module path:**:
+
    ```bash
    go mod tidy
    ```
+
 3. **Build and run**:
+
    ```bash
    # Make sure CGO is enabled
    export CGO_ENABLED=1
@@ -79,5 +85,11 @@ logging-microservice/
    go build -o logging-ms main.go
    ./logging-ms
    ```
+
 4. **Confirm the service is running at http://localhost:8080.**
-   
+
+---
+
+| Variable | Default | Description | 
+|----------|---------|-------------|
+| PORT     | 8080    | The port on which the server listens |
