@@ -81,7 +81,7 @@ logging-microservice/
    # Make sure CGO is enabled
    export CGO_ENABLED=1
 
-   go build -o logging-ms main.go
+   go build -o logging-ms.exe main.go
    ./logging-ms
    ```
 
