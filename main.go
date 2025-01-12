@@ -6,7 +6,10 @@ package main
 
 import (
     "log"
+    "os"
     "net/http"
+
+    "github.com/joho/godotenv"
 
     "logging_microservice/db"
     "logging_microservice/handlers"
@@ -14,9 +17,14 @@ import (
 
 func main() {
     log.Println("Starting log service")
+        // Load .env file
+    err := godotenv.Load()
+    if err != nil {
+        log.Fatal("Error loading .env file")
+    }
 
-    // Initialize the database
-    if err := db.InitDB("./logging_microservice.db"); err != nil {
+    // Initialize the database connection
+    if err := db.InitDB("./logs.db"); err != nil {
         log.Fatal("Database initialization failed:", err)
     }
     defer db.DB.Close()
@@ -31,7 +39,10 @@ func main() {
     http.HandleFunc("/logs/", handlers.LogsHandler)
     http.HandleFunc("/config", handlers.ConfigHandler)
 
-    log.Println("Server started on :8080")
-    log.Fatal(http.ListenAndServe(":8080", nil))
+    // serve
+    port := os.Getenv("PORT")
+    address := ":" + port
+    log.Printf("log server listening on %s\n", address)
+    log.Fatal(http.ListenAndServe(address, nil))
 }
 
