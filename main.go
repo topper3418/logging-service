@@ -40,7 +40,10 @@ func main() {
     http.HandleFunc("/config", handlers.ConfigHandler)
 
     // serve
-    port := os.getEnvOrDefault("PORT", "8080")
+    port := os.Getenv("PORT")
+    if port == "" {
+        port = "8080"
+    }
     address := ":" + port
     log.Printf("log server listening on %s\n", address)
     log.Fatal(http.ListenAndServe(address, nil))
