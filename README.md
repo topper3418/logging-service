@@ -136,12 +136,12 @@ logging-microservice/
 
    ```bash
    docker run -d \
-   --name logging-ms \
-   -e PORT=9000 \
-   -e DB_PATH=/app/logs.db \
-   -p 9000:9000 \
-   -v $(pwd)/data:/app \
-   logging-ms:latest
+      --name logging-ms \
+      -e PORT=9000 \
+      -e DB_PATH=/app/logs.db \
+      -p 9000:9000 \
+      -v $(pwd)/data:/app \
+      logging-ms:latest
    ```
 
 ---
