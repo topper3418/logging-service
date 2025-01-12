@@ -128,7 +128,7 @@ logging-microservice/
    - -e DB_PATH=/app/logs.db: Tells the service to store the SQLite DB at /app/logs.db.
    ### Passing Environment Vars at Runtime
    If you want to override the port:
-   ```bash
+   bash```
    docker run -d \
      --name logging-ms \
      -e PORT=9000 \
