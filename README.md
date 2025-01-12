@@ -90,6 +90,51 @@ logging-microservice/
 
 ---
 
+## Environment Variables
+
 | Variable | Default | Description | 
 |----------|---------|-------------|
 | PORT     | 8080    | The port on which the server listens |
+
+---
+
+## Docker Instructions
+
+1. **Build the Image**:
+   ```bash
+   docker build -t logging-ms:latest .
+   ```
+   **Important:** If you’re using go-sqlite3, ensure your Dockerfile has CGO enabled and a C toolchain (e.g. Alpine’s build-base) in the build stage:
+   ```dockerfile
+   FROM golang:1.20-alpine AS builder
+   RUN apk add --no-cache build-base
+   ENV CGO_ENABLED=1
+   # ...
+   ```
+
+2. **Run with a Persistent Volume**:
+   ```bash
+   docker run -d \
+     --name logging-ms \
+     -p 8080:8080 \
+     -v $(pwd)/data:/app \
+     -e DB_PATH=/app/logs.db \
+     logging-ms:latest
+   ```
+   **Explanation:**
+
+   - -p 8080:8080: Publishes port 8080 from the container to host machine.
+   - -v $(pwd)/data:/app: Mounts a local directory ./data into /app in the container, so the SQLite file (logs.db) persists on your host machine.
+   - -e DB_PATH=/app/logs.db: Tells the service to store the SQLite DB at /app/logs.db.
+   ### Passing Environment Vars at Runtime
+   If you want to override the port:
+   ```bash
+   docker run -d \
+     --name logging-ms \
+     -e PORT=9000 \
+     -e DB_PATH=/app/logs.db \
+     -p 9000:9000 \
+     -v $(pwd)/data:/app \
+     logging-ms:latest
+   ```
+
