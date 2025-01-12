@@ -117,12 +117,12 @@ logging-microservice/
 2. **Run with a Persistent Volume**:
 
    ```bash
+   docker volume create logger-data
    docker run -d \
-   --name logging-ms \
-   -p 8080:8080 \
-   -v $(pwd)/data:/app \
-   -e DB_PATH=/app/logs.db \
-   logging-ms:latest
+      --name logging-service \
+      -p 8080:80 \
+      -v logger-data:/app/logs.db \
+      logging-ms:latest
    ```
 
    **Explanation:**
