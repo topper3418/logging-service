@@ -38,8 +38,8 @@ COPY --from=builder /app/main /app/main
 COPY .env /app/.env
 
 # set and expose the port
-ENV PORT=80
-EXPOSE 80
+ENV PORT=8080
+EXPOSE ${PORT}
 
 # Run the Go binary
 CMD ["/app/main"]
