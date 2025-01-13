@@ -37,7 +37,7 @@ func main() {
     // Register routes
     http.HandleFunc("/logs", handlers.LogsHandler)
     http.HandleFunc("/logs/", handlers.LogsHandler)
-    http.HandleFunc("/config", handlers.ConfigHandler)
+    http.HandleFunc("/loggers", handlers.ConfigHandler)
 
     // serve
     port := os.Getenv("PORT")

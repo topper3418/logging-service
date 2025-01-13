@@ -46,3 +46,27 @@ func UpdateLoggerLevel(loggerName, newLevel string) error {
     return err
 }
 
+// ListLoggers lists all loggers and their levels.
+func ListLoggers() ([]models.Logger, error) {
+    rows, err := DB.Query(`SELECT id, name, level FROM logger`)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    var loggers []models.Logger
+    for rows.Next() {
+        var logger models.Logger
+        if err := rows.Scan(&logger.ID, &logger.Name, &logger.Level); err != nil {
+            return nil, err
+        }
+        loggers = append(loggers, logger)
+    }
+
+    if err := rows.Err(); err != nil {
+        return nil, err
+    }
+
+    return loggers, nil
+}
+
