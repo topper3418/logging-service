@@ -32,6 +32,7 @@ func handleCreateLog(w http.ResponseWriter, r *http.Request) {
 
 	var entry models.LogEntry
 	if err := json.NewDecoder(r.Body).Decode(&entry); err != nil {
+		log.Println("Invalid request payload", err)
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
@@ -49,6 +50,7 @@ func handleCreateLog(w http.ResponseWriter, r *http.Request) {
 	// Check level priority
 	if models.LevelPriority[entry.Level] < models.LevelPriority[logger.Level] {
 		msg := fmt.Sprintf("Log level too low: %s < %s\n", entry.Level, logger.Level)
+		log.Println(msg)
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte(msg))
 		return

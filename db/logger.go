@@ -2,12 +2,14 @@ package db
 
 import (
     "database/sql"
+    "log"
 
     "logging_microservice/models"
 )
 
 // GetOrCreateLogger retrieves the logger by name or creates a new one
 func GetLogger(loggerName string) (models.Logger, error) {
+    log.Printf("searching for logger %s", loggerName)
     row := DB.QueryRow(`SELECT id, level FROM logger WHERE name = ?`, loggerName)
 
     var loggerID int
@@ -42,12 +44,14 @@ func GetLogger(loggerName string) (models.Logger, error) {
 
 // UpdateLoggerLevel updates the named logger to a new level
 func UpdateLoggerLevel(loggerName, newLevel string) error {
+    log.Printf("Updating logger %s to level %s", loggerName, newLevel)
     _, err := DB.Exec(`UPDATE logger SET level = ? WHERE name = ?`, newLevel, loggerName)
     return err
 }
 
 // ListLoggers lists all loggers and their levels.
 func ListLoggers() ([]models.Logger, error) {
+    log.Printf("Listing loggers")
     rows, err := DB.Query(`SELECT id, name, level FROM logger`)
     if err != nil {
         return nil, err
