@@ -6,6 +6,7 @@ package db
 import (
     "database/sql"
     "log"
+    "os"
 
     _ "github.com/mattn/go-sqlite3"
 )
@@ -15,6 +16,15 @@ var DB *sql.DB
 
 // InitDB opens the SQLite database
 func InitDB(dbFile string) error {
+    // make sure the file exists
+    if _, err := os.Stat(dbFile); os.IsNotExist(err) {
+        log.Println("Database file does not exist, creating")
+        file, err := os.Create(dbFile)
+        if err != nil {
+            return err
+        }
+        file.Close()
+    }
     var err error
     DB, err = sql.Open("sqlite3", dbFile)
     if err != nil {
