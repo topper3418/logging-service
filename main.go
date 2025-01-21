@@ -10,6 +10,7 @@ import (
     "net/http"
 
     "github.com/joho/godotenv"
+    "github.com/rs/cors"
 
     "logging_microservice/db"
     "logging_microservice/handlers"
@@ -24,7 +25,7 @@ func main() {
     }
 
     // Initialize the database connection
-    if err := db.InitDB("./data/logs.db"); err != nil {
+    if err := db.InitDB("logs.db"); err != nil {
         log.Fatal("Database initialization failed:", err)
     }
     defer db.DB.Close()
@@ -34,11 +35,22 @@ func main() {
         log.Fatal("Failed to create tables:", err)
     }
 
-    // Register routes
-    http.HandleFunc("/logs", handlers.LogsHandler)
-    http.HandleFunc("/logs/", handlers.LogsHandler)
-    http.HandleFunc("/loggers", handlers.ConfigHandler)
+    // Register routes with CORS middleware
+    mux := http.NewServeMux()
+    mux.HandleFunc("/logs", handlers.LogsHandler)
+    mux.HandleFunc("/logs/", handlers.LogsHandler)
+    mux.HandleFunc("/loggers", handlers.ConfigHandler)
 
+    // CORS configuration
+    c := cors.New(cors.Options{
+        AllowedOrigins:   []string{"*"}, // You can replace "*" with specific origins like "http://localhost:3000"
+        AllowCredentials: true,
+        AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
+        AllowedHeaders:   []string{"Content-Type", "Authorization"},
+    })
+
+    // Wrap the ServeMux with CORS middleware
+    handler := c.Handler(mux)
     // serve
     port := os.Getenv("PORT")
     if port == "" {
@@ -46,6 +58,6 @@ func main() {
     }
     address := ":" + port
     log.Printf("log server listening on %s\n", address)
-    log.Fatal(http.ListenAndServe(address, nil))
+    log.Fatal(http.ListenAndServe(address, handler))
 }
 
