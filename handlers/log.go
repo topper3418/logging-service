@@ -49,7 +49,7 @@ func handleCreateLog(w http.ResponseWriter, r *http.Request) {
 
 	// Check level priority
 	if models.LevelPriority[entry.Level] < models.LevelPriority[logger.Level] {
-		msg := fmt.Sprintf("Log level too low: %s < %s\n", entry.Level, logger.Level)
+		msg := fmt.Sprintf("Log level for %s too low: %s < %s\n", logger.Name, entry.Level, logger.Level)
 		log.Println(msg)
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte(msg))
