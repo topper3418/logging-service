@@ -28,7 +28,7 @@ func LogsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleCreateLog(w http.ResponseWriter, r *http.Request) {
-	log.Println("Handling POST request for new log entry")
+	// log.Println("Handling POST request for new log entry")
 
 	var entry models.LogEntry
 	if err := json.NewDecoder(r.Body).Decode(&entry); err != nil {
@@ -50,13 +50,13 @@ func handleCreateLog(w http.ResponseWriter, r *http.Request) {
 	// Check level priority
 	if models.LevelPriority[entry.Level] < models.LevelPriority[logger.Level] {
 		msg := fmt.Sprintf("Log level for %s too low: %s < %s\n", logger.Name, entry.Level, logger.Level)
-		log.Println(msg)
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte(msg))
 		return
 	}
 
 	// Create the log entry
+	log.Printf("Creating log entry for %s:\n\t%s\n", entry.Logger, entry.Message)
 	newEntry, err := db.CreateLog(entry)
 	if err != nil {
 		log.Println("Failed to create log:", err)
