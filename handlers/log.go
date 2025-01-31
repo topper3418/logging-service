@@ -32,7 +32,7 @@ func handleCreateLog(w http.ResponseWriter, r *http.Request) {
 
 	var entry models.LogEntry
 	if err := json.NewDecoder(r.Body).Decode(&entry); err != nil {
-		log.Println("Invalid request payload", err)
+		log.Println("Invalid request payload - ", err)
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
@@ -71,10 +71,11 @@ func handleCreateLog(w http.ResponseWriter, r *http.Request) {
 func handleGetLogs(w http.ResponseWriter, r *http.Request) {
 	// Distinguish between listing all logs or a single log by ID
 	path := strings.TrimPrefix(r.URL.Path, "/logs")
-	if path == "" {
+	if path == "" || path == "/" {
 		// /logs -> list logs
 		listLogs(w, r)
 	} else {
+		fmt.Println("path: ", path)
 		// /logs/{id} -> single log
 		logIDStr := strings.TrimPrefix(path, "/")
 		logID, err := strconv.ParseInt(logIDStr, 10, 64)
