@@ -2,7 +2,6 @@ package db
 
 import (
 	"encoding/json"
-	"fmt"
 	"strings"
 	"time"
 
@@ -138,7 +137,6 @@ func GetLogs(
 		queryBuilder += " OFFSET ?"
 		args = append(args, offsetStr)
 	}
-	fmt.Println("queryBuilder: ", queryBuilder)
 
 	rows, err := DB.Query(queryBuilder, args...)
 	if err != nil {
