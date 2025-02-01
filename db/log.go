@@ -2,7 +2,6 @@ package db
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -82,8 +81,6 @@ func GetLogs(
 	minTimeStr, maxTimeStr, searchStr, offsetStr, limitStr string,
 	excludeLoggers []int,
 ) ([]models.LogEntry, error) {
-	fmt.Printf("getting logs, excludeLoggers: %v\n", excludeLoggers)
-
 	queryBuilder := `
         SELECT log.id, log.timestamp, log.logger_id, logger.name, log.level, log.message
         FROM log
@@ -104,18 +101,13 @@ func GetLogs(
 
 	// Exclude loggers
 	if len(excludeLoggers) > 0 {
-		fmt.Println("excludeLoggers > 0")
 		placeholders := strings.Repeat("?,", len(excludeLoggers))
 		placeholders = placeholders[:len(placeholders)-1]
-		log.Printf("placeholders: %v\n", placeholders)
 		queryBuilder += " AND logger.id NOT IN (" + placeholders + ")"
 		for _, l := range excludeLoggers {
-			log.Println("exclude logger:", l)
 			args = append(args, l)
 		}
 	}
-
-	log.Printf("args: %v\n", args)
 
 	// Search in message
 	if searchStr != "" {
@@ -124,8 +116,6 @@ func GetLogs(
 		queryBuilder += ` AND log.message LIKE ?`
 		args = append(args, "%"+searchStr+"%")
 	}
-
-	log.Printf("args after search: %v\n", args)
 
 	// Order and limit
 	queryBuilder += " ORDER BY log.timestamp DESC"
@@ -139,9 +129,6 @@ func GetLogs(
 		queryBuilder += " OFFSET ?"
 		args = append(args, offsetStr)
 	}
-	log.Printf("args: %v\n", args)
-
-	fmt.Println(queryBuilder, args)
 
 	rows, err := DB.Query(queryBuilder, args...)
 	if err != nil {

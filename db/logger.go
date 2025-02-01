@@ -25,6 +25,7 @@ func GetLogger(loggerName string) (models.Logger, error) {
 		}
 		lastInsertID, _ := res.LastInsertId()
 		loggerID = int(lastInsertID)
+		log.Printf("Logger %s created successfully", loggerName)
 		return models.Logger{
 			ID:    loggerID,
 			Name:  loggerName,
@@ -43,8 +44,7 @@ func GetLogger(loggerName string) (models.Logger, error) {
 }
 
 // UpdateLoggerLevel updates the named logger to a new level
-func UpdateLoggerLevel(loggerId, newLevel string) error {
-	log.Printf("Updating logger of id %s to level %s", loggerId, newLevel)
+func UpdateLoggerLevel(loggerId int, newLevel string) error {
 	_, err := DB.Exec(`UPDATE logger SET level = ? WHERE id = ?`, newLevel, loggerId)
 	return err
 }
