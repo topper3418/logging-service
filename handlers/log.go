@@ -75,7 +75,6 @@ func handleGetLogs(w http.ResponseWriter, r *http.Request) {
 		// /logs -> list logs
 		listLogs(w, r)
 	} else {
-		fmt.Println("path: ", path)
 		// /logs/{id} -> single log
 		logIDStr := strings.TrimPrefix(path, "/")
 		logID, err := strconv.ParseInt(logIDStr, 10, 64)
