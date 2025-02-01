@@ -105,13 +105,9 @@ func listLogs(w http.ResponseWriter, r *http.Request) {
 	limitStr := r.URL.Query().Get("limit")
 	excludeLoggersStr := r.URL.Query()["excludeLoggers"]
 	searchStr := r.URL.Query().Get("search")
-	log.Printf("searchStr length: %d\n", len(searchStr))
 	var excludeLoggers []int
-	fmt.Println(r.URL.RawQuery)
 	if excludeLoggersStr != nil {
-		log.Println("excludeLoggersStr: ", excludeLoggersStr)
 		for _, loggerStr := range excludeLoggersStr {
-			log.Printf("loggerStr: %s\n", loggerStr)
 			loggerId, err := strconv.Atoi(loggerStr)
 			if err != nil {
 				errMsg := fmt.Sprintf("Invalid logger ID: %s", loggerStr)
@@ -120,11 +116,7 @@ func listLogs(w http.ResponseWriter, r *http.Request) {
 			}
 			excludeLoggers = append(excludeLoggers, loggerId)
 		}
-	} else {
-		log.Println("excludeLoggersStr is nil")
 	}
-	// print for debugging
-	fmt.Println("exclude loggers: ", excludeLoggers)
 
 	logs, err := db.GetLogs(minTimeStr, maxTimeStr, searchStr, offsetStr, limitStr, excludeLoggers)
 	if err != nil {
