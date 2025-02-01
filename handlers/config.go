@@ -9,22 +9,25 @@ import (
 	"net/http"
 
 	"logging_microservice/db"
-	"logging_microservice/models"
 )
 
 // ConfigHandler handles setting logger levels
 func ConfigHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPut:
+		type LoggerUpdateRequest struct {
+			ID    string `json:"id"`
+			Level string `json:"level"`
+		}
 		// Handle PUT request to update the logger level
-		var loggerConfig models.Logger
+		var loggerConfig LoggerUpdateRequest
 		if err := json.NewDecoder(r.Body).Decode(&loggerConfig); err != nil {
 			http.Error(w, "Invalid request payload - ", http.StatusBadRequest)
 			return
 		}
 
 		// Update the logger level in the DB
-		err := db.UpdateLoggerLevel(loggerConfig.Name, loggerConfig.Level)
+		err := db.UpdateLoggerLevel(loggerConfig.ID, loggerConfig.Level)
 		if err != nil {
 			log.Println("Failed to update logger level:", err)
 			http.Error(w, "Failed to update logger level", http.StatusInternalServerError)

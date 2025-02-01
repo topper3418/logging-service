@@ -56,7 +56,7 @@ func handleCreateLog(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create the log entry
-	log.Printf("Creating log entry for %s:\n\t%s\n", entry.Logger, entry.Message)
+	// log.Printf("Creating log entry for %s:\n\t%s\n", entry.Logger, entry.Message)
 	newEntry, err := db.CreateLog(entry)
 	if err != nil {
 		log.Println("Failed to create log:", err)
@@ -103,11 +103,30 @@ func listLogs(w http.ResponseWriter, r *http.Request) {
 	maxTimeStr := r.URL.Query().Get("maxtime")
 	offsetStr := r.URL.Query().Get("offset")
 	limitStr := r.URL.Query().Get("limit")
-	includeLoggers := r.URL.Query()["includeLoggers"]
-	excludeLoggers := r.URL.Query()["excludeLoggers"]
+	excludeLoggersStr := r.URL.Query()["excludeLoggers"]
 	searchStr := r.URL.Query().Get("search")
+	log.Printf("searchStr length: %d\n", len(searchStr))
+	var excludeLoggers []int
+	fmt.Println(r.URL.RawQuery)
+	if excludeLoggersStr != nil {
+		log.Println("excludeLoggersStr: ", excludeLoggersStr)
+		for _, loggerStr := range excludeLoggersStr {
+			log.Printf("loggerStr: %s\n", loggerStr)
+			loggerId, err := strconv.Atoi(loggerStr)
+			if err != nil {
+				errMsg := fmt.Sprintf("Invalid logger ID: %s", loggerStr)
+				http.Error(w, errMsg, http.StatusBadRequest)
+				return
+			}
+			excludeLoggers = append(excludeLoggers, loggerId)
+		}
+	} else {
+		log.Println("excludeLoggersStr is nil")
+	}
+	// print for debugging
+	fmt.Println("exclude loggers: ", excludeLoggers)
 
-	logs, err := db.GetLogs(minTimeStr, maxTimeStr, searchStr, offsetStr, limitStr, includeLoggers, excludeLoggers)
+	logs, err := db.GetLogs(minTimeStr, maxTimeStr, searchStr, offsetStr, limitStr, excludeLoggers)
 	if err != nil {
 		log.Println("Failed to get logs:", err)
 		http.Error(w, "Failed to get logs", http.StatusInternalServerError)

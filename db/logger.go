@@ -43,9 +43,9 @@ func GetLogger(loggerName string) (models.Logger, error) {
 }
 
 // UpdateLoggerLevel updates the named logger to a new level
-func UpdateLoggerLevel(loggerName, newLevel string) error {
-	log.Printf("Updating logger %s to level %s", loggerName, newLevel)
-	_, err := DB.Exec(`UPDATE logger SET level = ? WHERE name = ?`, newLevel, loggerName)
+func UpdateLoggerLevel(loggerId, newLevel string) error {
+	log.Printf("Updating logger of id %s to level %s", loggerId, newLevel)
+	_, err := DB.Exec(`UPDATE logger SET level = ? WHERE id = ?`, newLevel, loggerId)
 	return err
 }
 
