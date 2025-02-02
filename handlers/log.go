@@ -41,7 +41,7 @@ func handleCreateLog(w http.ResponseWriter, r *http.Request) {
 	var logger models.Logger
 	logger, err := db.GetLogger(entry.Logger)
 	if err != nil {
-		log.Println("Failed to get/create logger:", err)
+		log.Printf("Failed to get/create logger %s: %s\n", logger.Name, err)
 		http.Error(w, "Failed to get/create logger", http.StatusInternalServerError)
 		return
 	}
