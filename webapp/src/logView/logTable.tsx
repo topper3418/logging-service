@@ -50,10 +50,10 @@ const LogTable: React.FC<LogTableProps> = ({ logsApi: { data, loading, error }, 
         return {};
     }
     return (
-        <div id="loggerTable" className='flex flex-col gap-2.5 border rounded-md p-1 '>
+        <div id="loggerTable" className='flex flex-col gap-2.5 border rounded-md p-1 w-auto'>
             <h2>Logs</h2>
-            <div className='overflow-y-auto grow'>
-                <table className="border border-collapse w-200 max-w-350">
+            <div className='overflow-y-auto grow w-auto'>
+                <table className="border border-collapse w-200">
                     <thead>
                         <tr>
                             <th className='p-1 border w-30'>Time</th>
