@@ -36,6 +36,7 @@ func main() {
 
 	// Register routes with CORS middleware
 	mux := http.NewServeMux()
+	mux.HandleFunc("/", handlers.ServeWebapp)
 	mux.HandleFunc("/logs", handlers.LogsHandler)
 	mux.HandleFunc("/logs/", handlers.LogsHandler)
 	mux.HandleFunc("/loggers", handlers.ConfigHandler)
