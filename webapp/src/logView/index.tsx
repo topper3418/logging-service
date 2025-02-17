@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom";
 import { useFetchLogs, useFilters } from "./logHooks";
 import Banner from "./banner";
 import Filters from "./filters";
