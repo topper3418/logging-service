@@ -22,16 +22,6 @@ const Filters: React.FC<LogFiltersProps> = ({ logFilters: { get, set, clear } })
                 value={get.maxTime}
                 onChange={set.maxTime} />
             <FilterElement
-                filterType={FilterType.NUMBER}
-                label="Offset"
-                value={get.offset}
-                onChange={set.offset} />
-            <FilterElement
-                filterType={FilterType.NUMBER}
-                label="Limit"
-                value={get.limit}
-                onChange={set.limit} />
-            <FilterElement
                 filterType={FilterType.TEXT}
                 label="Search"
                 value={get.search}

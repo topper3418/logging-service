@@ -78,7 +78,7 @@ const LoggerTable: React.FC<LoggerTableProps> = ({ loggersApi: { data, loading, 
                                 </td>
                             </tr>
                         )) : (
-                            <tr><td colSpan={4} className='p-1 border'>No logs to display</td></tr>
+                            <tr><td colSpan={4} className='p-1 border'>No loggers to display</td></tr>
                         )}
                     </tbody>
                 </table>
