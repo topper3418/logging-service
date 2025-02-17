@@ -28,7 +28,7 @@ const LogView: React.FC = () => {
         refreshView()
     }
     useEffect(() => {
-        const timeout = setTimeout(autoRefetch, 500)
+        const timeout = setTimeout(autoRefetch, 5000)
         return () => clearTimeout(timeout)
     }, [logs.loading])
     useEffect(() => {
