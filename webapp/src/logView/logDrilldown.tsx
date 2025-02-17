@@ -9,7 +9,7 @@ interface LogDrilldownProps {
 const LogDrilldown: React.FC<LogDrilldownProps> = ({ logId }) => {
     const { data, loading, error } = useFetchLogData(logId);
     return (
-        <div id="logDrilldown" className='flex flex-col gap-2.5 border rounded-md p-1 grow'>
+        <div id="logDrilldown" className='flex flex-col gap-2.5 border rounded-md p-1 grow overflow-auto'>
             <h2>Log Drilldown</h2>
             {!logId ? <p>Select Log...</p> :
                 loading ? <p>Loading...</p> :
