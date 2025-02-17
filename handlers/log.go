@@ -119,8 +119,9 @@ func listLogs(w http.ResponseWriter, r *http.Request) {
 
 	logs, err := db.GetLogs(minTimeStr, maxTimeStr, searchStr, offsetStr, limitStr, excludeLoggers)
 	if err != nil {
-		log.Println("Failed to get logs:", err)
-		http.Error(w, "Failed to get logs", http.StatusInternalServerError)
+		errMsg := fmt.Sprintf("Failed to get logs: %s", err)
+		log.Println(errMsg)
+		http.Error(w, errMsg, http.StatusInternalServerError)
 		return
 	}
 

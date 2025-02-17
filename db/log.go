@@ -2,6 +2,7 @@ package db
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -126,6 +127,9 @@ func GetLogs(
 		args = append(args, limitStr)
 	}
 	if offsetStr != "" {
+		if limitStr == "" {
+			return nil, fmt.Errorf("Cannot do an offset without a limit")
+		}
 		queryBuilder += " OFFSET ?"
 		args = append(args, offsetStr)
 	}
