@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import { useFetchLogs, useFilters } from "./logHooks";
 import Banner from "./banner";
@@ -13,6 +13,7 @@ const LogView: React.FC = () => {
     const navigate = useNavigate();
     const [selectedLogId, setSelectedLogId] = useState<number | null>(null);
     const [showLoggers, setShowLoggers] = useState<boolean>(true);
+    const [autoRefetchEnabled, setAutoRefetchEnabled] = useState<boolean>(true);
     const logFilters = useFilters();
 
     const logs = useFetchLogs(logFilters.get);
@@ -22,11 +23,24 @@ const LogView: React.FC = () => {
         logs.refetch();
         loggers.refetch();
     }
+    const autoRefetch = () => {
+        if (!autoRefetchEnabled) return
+        refreshView()
+    }
+    useEffect(() => {
+        const timeout = setTimeout(autoRefetch, 500)
+        return () => clearTimeout(timeout)
+    }, [logs.loading])
+    useEffect(() => {
+        refreshView()
+    }, [logFilters])
     return (
         <div id="logView" className="flex h-full flex-col p-2.5 gap-2.5 max-h-full">
             <Banner title="Log View">
                 <button onClick={() => navigate("/")}>Back</button>
-                <button onClick={refreshView}>Refresh</button>
+                <button onClick={() => setAutoRefetchEnabled(!autoRefetchEnabled)}>
+                    {autoRefetchEnabled ? 'Refresh Enabled' : "Refresh Disabled"}
+                </button>
             </Banner>
             <Filters logFilters={logFilters} />
             <div className="flex flex-row gap-2.5 m-0 grow overflow-hidden justify-start">

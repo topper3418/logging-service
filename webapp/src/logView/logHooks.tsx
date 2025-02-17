@@ -105,6 +105,7 @@ export const useFetchLogs = (params: LogQueryParams): LogsApi => {
     useEffect(() => {
         const endpoint = `/logs`;
         setLoading(true);
+        console.log('fetching logs', { endpoint, params })
         axios.get(endpoint, {
             params, paramsSerializer: (paramsObj) => {
                 const searchParams = new URLSearchParams();
