@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"time"
 
@@ -43,8 +44,56 @@ func CreateLog(entry models.LogEntry) (models.LogEntry, error) {
 			return entry, metaErr
 		}
 	}
-
+	// Now, check database file size and trim if necessary
+	if err := trimLogsIfNeeded(); err != nil {
+		// Log the error, but don't return it
+		log.Printf("error trimming logs: %s", err)
+		// log the error
+	}
 	return entry, nil
+}
+
+// trims database when it exceeds 100mb
+func trimLogsIfNeeded() error {
+	// Get database file name
+	rows, err := DB.Query("PRAGMA database_list;")
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	var seq int
+	var name string
+	var file string
+	for rows.Next() {
+		err = rows.Scan(&seq, &name, &file)
+		if err != nil {
+			return err
+		}
+		if name == "main" {
+			break
+		}
+	}
+
+	// Get file size
+	fi, err := os.Stat(file)
+	if err != nil {
+		return err
+	}
+	size := fi.Size()
+
+	if size > 100*1024*1024 {
+		// Delete 100 oldest logs
+		_, err := DB.Exec(`
+			DELETE FROM log WHERE id IN (
+			SELECT id FROM log ORDER BY timestamp ASC LIMIT 100
+		);`)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // GetSingleLog retrieves a single log (and metadata) by ID
