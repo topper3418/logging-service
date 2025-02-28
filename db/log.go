@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"os"
 	"strings"
 	"time"
 
@@ -55,44 +54,25 @@ func CreateLog(entry models.LogEntry) (models.LogEntry, error) {
 
 // trims database when it exceeds 100mb
 func trimLogsIfNeeded() error {
-	// Get database file name
-	rows, err := DB.Query("PRAGMA database_list;")
+	// Get the current number of logs
+	var count int
+	err := DB.QueryRow("SELECT COUNT(*) FROM log").Scan(&count)
 	if err != nil {
 		return err
 	}
-	defer rows.Close()
 
-	var seq int
-	var name string
-	var file string
-	for rows.Next() {
-		err = rows.Scan(&seq, &name, &file)
-		if err != nil {
-			return err
-		}
-		if name == "main" {
-			break
-		}
-	}
-
-	// Get file size
-	fi, err := os.Stat(file)
-	if err != nil {
-		return err
-	}
-	size := fi.Size()
-
-	if size > 100*1024*1024 {
-		// Delete 100 oldest logs
+	// Set a maximum number of logs, e.g., 1,000,000
+	const maxLogs = 1000000
+	if count > maxLogs {
+		// Delete the oldest logs exceeding the limit
 		_, err := DB.Exec(`
-			DELETE FROM log WHERE id IN (
-			SELECT id FROM log ORDER BY timestamp ASC LIMIT 100
-		);`)
+            DELETE FROM log WHERE id IN (
+                SELECT id FROM log ORDER BY timestamp ASC LIMIT ?
+            )`, count-maxLogs+100) // trim a few extra so we don't have to run this every single time
 		if err != nil {
 			return err
 		}
 	}
-
 	return nil
 }
 
