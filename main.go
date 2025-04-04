@@ -24,7 +24,8 @@ func main() {
 	}
 
 	// Initialize the database connection
-	if err := db.InitDB("data/logs.db"); err != nil {
+	dbFilepath := os.Getenv("LOGGING_SERVICE_DB_FILEPATH")
+	if err := db.InitDB(dbFilepath); err != nil {
 		log.Fatal("Database initialization failed:", err)
 	}
 	defer db.DB.Close()
@@ -53,7 +54,7 @@ func main() {
 	// Wrap the ServeMux with CORS middleware
 	handler := c.Handler(mux)
 	// serve
-	port := os.Getenv("PORT")
+	port := os.Getenv("LOGGING_SERVICE_PORT")
 	if port == "" {
 		port = "8080"
 	}
