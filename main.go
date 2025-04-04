@@ -59,9 +59,6 @@ func main() {
 	// serve
 	port := os.Getenv("LOGGING_SERVICE_PORT")
 	if port == "" {
-		port == 8080
-	}
-	if port == "" {
 		port = "8080"
 	}
 	address := ":" + port
