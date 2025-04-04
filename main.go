@@ -25,6 +25,9 @@ func main() {
 
 	// Initialize the database connection
 	dbFilepath := os.Getenv("LOGGING_SERVICE_DB_FILEPATH")
+	if dbFilepath == "" {
+		dbFilepath = "logs.db"
+	}
 	if err := db.InitDB(dbFilepath); err != nil {
 		log.Fatal("Database initialization failed:", err)
 	}
@@ -55,6 +58,9 @@ func main() {
 	handler := c.Handler(mux)
 	// serve
 	port := os.Getenv("LOGGING_SERVICE_PORT")
+	if port == "" {
+		port == 8080
+	}
 	if port == "" {
 		port = "8080"
 	}
