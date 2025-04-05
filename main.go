@@ -20,12 +20,13 @@ func main() {
 	// Load .env file
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Println("No .env file found, using environment")
 	}
 
 	// Initialize the database connection
 	dbFilepath := os.Getenv("LOGGING_SERVICE_DB_FILEPATH")
 	if dbFilepath == "" {
+		log.Println("No LOGGING_SERVICE_DB_FILEPATH found in environment, using default")
 		dbFilepath = "logs.db"
 	}
 	if err := db.InitDB(dbFilepath); err != nil {
@@ -59,6 +60,7 @@ func main() {
 	// serve
 	port := os.Getenv("LOGGING_SERVICE_PORT")
 	if port == "" {
+		log.Println("No LOGGING_SERVICE_PORT found in environment, using default")
 		port = "8080"
 	}
 	address := ":" + port
